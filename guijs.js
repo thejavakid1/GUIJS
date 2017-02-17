@@ -87,22 +87,26 @@ function GUI (callback){
         overlay.style.visibility = "visible";
     }
     this.moveTo = function(x,y){
-        overlay.style.margin = "none"
         overlay.style.top = y;
         overlay.style.left = x;
     }
-    this.followMouse = function(){
-        overlay.style.margin = "none";
-        overlay.style.top = "0px";
-        overlay.style.left = "0px";
-        window.addEventListener("mousemove", this.mouseMove);
-        this.mouseMove = function(e){
-            console.log(e)
-            overlay.style.left = e.clientX+"px";
-            overlay.style.top = e.clientY+"px";
+
+    //setPosToMouse function is UNSTABLE.
+    this.posControler = function(){
+        this.preMove = function(){
+            if(!overlay.style.margin == "none"){
+                overlay.style.margin = "none";
+            }
         };
-        this.haltFollow = function(){
-            canvas.removeEventListener('mousemove', this.mouseMove);
-        }
-    }
+        this.snapTo = function(e){
+            this.preMove();
+            overlay.style.top = e.clientY+"px";
+            overlay.style.left = e.clientX+"px"
+            console.log(this)
+            window.addEventListener("onmouseclick", this.snapTo);
+        };
+        this.waitFor = function(){
+            window.addEventListener("onmouseclick", this.snapTo);
+        };
+    };
 }

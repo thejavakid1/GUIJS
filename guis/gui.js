@@ -1,9 +1,9 @@
 //this should be the same name as your gui's name, but does not need to be.
 var gui = new GUI(function(){
-    //triggers when you click the asdf button
+    this.isMoveToggled = true;
+    gui.guiMover = new gui.posControler();
     gui.addButton("asdf", function(){
-        gui.haltFollow();
-        alert("helloworld");
+        gui.guiMover.waitFor();
     });
     //triggers when you click the fake button
     gui.addButton("fake", function(){
