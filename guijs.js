@@ -12,7 +12,7 @@ function loadGUI(guiName ,guiID){
 }
 /*
 loads gui using id in js file
-*/
+
 function loadGUI(guiName){
     //load script
     var script = document.createElement('script');
@@ -24,7 +24,6 @@ function loadGUI(guiName){
 }
 /*
 * sets gui to element of given id
-*/
 function GUI (assignments){
     this.guiID = "";
     //set style vars
@@ -78,7 +77,7 @@ function GUI (assignments){
         this.overlay().style.left = x+"px";
     }
 }
-
+*/
 function GUI (assignments, guiID){
     //set style vars
     this.width = 75;
@@ -96,19 +95,16 @@ function GUI (assignments, guiID){
     this.elements = {};
     //add function to execute on click of a element
     this.addButton = function(id, func){
-        this.elements[id].onclick = func;
+        document.getElementById(id).onclick = func;
     }
     //adds any given event and function to element
     this.addElement = function(id, trigger,func){
-        (this.elements[id])[trigger] = func;
+        document.getElementById(id)[trigger] = func;
     }
     //init of gui.
     this.init = function(){
         this.updateStyle();
         this.hide();
-        for(i =0;i<this.overlay().children.length; i++){
-            this.elements[this.overlay().children[i].id] = this.overlay().children[i];
-        }
         assignments();
     }
     this.updateStyle = function(){
