@@ -82,7 +82,7 @@ function GUI (guiID){
     //set style vars
     this.width = 75;
     this.height = 75;
-    this.backgroundColor = "E0E0E0";
+    this.backgroundColor = "#eaeaea";
     //gets overlay
     this.overlay = function(){
         return document.getElementById(guiID);
