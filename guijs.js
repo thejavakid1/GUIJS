@@ -105,7 +105,7 @@ function GUI (assignments, guiID){
     //init of gui.
     this.init = function(){
         this.updateStyle();
-        gui.hide();
+        this.hide();
         for(i =0;i<this.overlay().children.length; i++){
             this.elements[this.overlay().children[i].id] = this.overlay().children[i];
         }
