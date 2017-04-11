@@ -1,5 +1,6 @@
 <style>
   .GUI_bar {
+    position: absolute;
     height: 0px;
     top: 18px;
     left: 1px;
@@ -26,21 +27,14 @@
     background-color: A5AEA5;
   }
 </style>
-<h1>
-    Example gui
-</h1>
-<br>
-click gui to bring up the gui.
-<script src="guijs.js"></script>
-<script>
-loadGUI("gui", "guiDummy");
-</script>
-<p id="guiDummy">
-    <button id="GUI_close" class="GUI_close">X</button>
-    <button id="GUI_mov" class="GUI_mov">#</button>
+<hr class="GUI_bar">
+<button class="GUI_close">X</button>
+<button class="GUI_mov">#</button>
+<p id='guiDummy'>
+    <button id='GUI_close' class='GUI_close'>X</button>
+    <button id='GUI_mov' class='GUI_mov'>#</button>
     <br>
-    <button id="asdf">asdfasdf</button>
-    <button id="fake">fake</button>
-    <button id="tester">tester</button>
+    <button id='asdf'>asdfasdf</button>
+    <button id='fake'>fake</button>
+    <button id='tester'>tester</button>
 </p>
-<button onclick="gui.show()">gui</button>

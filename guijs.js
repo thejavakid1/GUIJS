@@ -1,62 +1,44 @@
-function loadGUI(guiName){
-    //create overlay
-    overlay = document.createElement('GUI_overlay');
-    overlay.id="overlay";
-    document.body.appendChild(overlay)
-    //load html
-    readFile("guis/"+guiName+".html", OverlayCallback)
+/*
+loads gui with ID
+*/
+function loadGUI(guiName ,guiID){
     //load script
     var script = document.createElement('script');
     script.src = "guis/"+guiName+".js";
     script.onload = function () {
-        try{
-            eval(guiName+".init();");
-        }catch(e){
-            alert("faild to load GUI "+guiName+":\n"+e.message);
-        }
+            eval(guiName+".init("+guiID+");");
     };
     document.head.appendChild(script);
 }
 /*
-*overlay init functions
+loads gui using id in js file
 */
-function OverlayCallback(layout){
-    //set overlay to imported html
-    overlay.innerHTML = layout;
+function loadGUI(guiName){
+    //load script
+    var script = document.createElement('script');
+    script.src = "guis/"+guiName+".js";
+    script.onload = function () {
+            eval(guiName+".init();");
+    };
+    document.head.appendChild(script);
 }
 /*
-*filereader code
+* sets gui to element of given id
 */
-function readFile(file, callback)
-{
-    var rawFile = new XMLHttpRequest();
-    // put true for serverside stuff
-    rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                var style =
-                "\n<style>"+
-                "#overlay{"+
-                "    height: 75%;"+//ajust as needed
-                "    width: 75%;"+//ajust as needed
-                "    position:absolute;"+
-                //"    margin: auto;"+
-                "    background-color: #E0E0E0;"+
-                "}"+
-                "</style>\n";
-                var allText = rawFile.responseText+style;
-                callback(allText);
-            }
-        }
+function GUI (assignments){
+    this.guiID = "";
+    //set style vars
+    this.width = 75;
+    this.height = 75;
+    this.backgroundColor = "E0E0E0";
+    //gets overlay
+    this.overlay = function(){
+        return document.getElementById(this.guiID);
     }
-    rawFile.send(null);
-}
-
-function GUI (callback){
+    //sets HTML in gui, required for some situations.
+    this.setHTML = function(html){
+        this.overlay().innerHTML = html;
+    }
     //list of elements in overlay
     this.elements = {};
     //add function to execute on click of a element
@@ -67,46 +49,87 @@ function GUI (callback){
     this.addElement = function(id, trigger,func){
         (this.elements[id])[trigger] = func;
     }
-    //should close and remove gui, but should vary on page.
-    this.closeWindow = function(){
+    //init of gui.
+    this.init = function(id){
+        this.guiID = id;
+        this.updateStyle();
+        gui.hide();
+        for(i =0;i<this.overlay().children.length; i++){
+            this.elements[this.overlay().children[i].id] = this.overlay().children[i];
+        }
+        assignments();
+    }
+    this.updateStyle = function(){
+        this.overlay().style.position = "absolute";
+        this.overlay().style.width = this.width;
+        this.overlay().style.height = this.height;
+        this.overlay().style.backgroundColor = this.backgroundColor;
+    }
+    //hides gui (pretty much closes window)
+    this.hide = function(){
+        this.overlay().style.visibility = "hidden";
+    }
+    //shows the window
+    this.show = function(){
+        this.overlay().style.visibility = "visible";
+    }
+    this.moveTo = function(x,y){
+        this.overlay().style.top = y+"px";
+        this.overlay().style.left = x+"px";
+    }
+}
 
+function GUI (assignments, guiID){
+    //set style vars
+    this.width = 75;
+    this.height = 75;
+    this.backgroundColor = "E0E0E0";
+    //gets overlay
+    this.overlay = function(){
+        return document.getElementById(guiID);
+    }
+    //sets HTML in gui, required for some situations.
+    this.setHTML = function(html){
+        this.overlay().innerHTML = html;
+    }
+    //list of elements in overlay
+    this.elements = {};
+    //add function to execute on click of a element
+    this.addButton = function(id, func){
+        this.elements[id].onclick = func;
+    }
+    //adds any given event and function to element
+    this.addElement = function(id, trigger,func){
+        (this.elements[id])[trigger] = func;
     }
     //init of gui.
     this.init = function(){
+        this.updateStyle();
         gui.hide();
-        for(i =0;i<overlay.children.length; i++){
-            this.elements[overlay.children[i].id] = overlay.children[i];
+        for(i =0;i<this.overlay().children.length; i++){
+            this.elements[this.overlay().children[i].id] = this.overlay().children[i];
         }
-        callback();
+        assignments();
     }
-    //hides gui
+    this.updateStyle = function(){
+        this.setStyleAttr("position","absolute");
+        this.setStyleAttr("width",this.width+"%");
+        this.setStyleAttr("height", this.height+"%");
+        this.setStyleAttr("backgroundColor", this.backgroundColor);
+    }
+    this.setStyleAttr = function(attr, val){
+        this.overlay().style[attr] = val;
+    }
+    //hides gui (pretty much closes window)
     this.hide = function(){
-        overlay.style.visibility = "hidden";
+        this.overlay().style.visibility = "hidden";
     }
+    //shows the window
     this.show = function(){
-        overlay.style.visibility = "visible";
+        this.overlay().style.visibility = "visible";
     }
     this.moveTo = function(x,y){
-        overlay.style.top = y;
-        overlay.style.left = x;
+        this.overlay().style.top = y+"px";
+        this.overlay().style.left = x+"px";
     }
-
-    //setPosToMouse function is UNSTABLE.
-    this.posControler = function(){
-        this.preMove = function(){
-            if(!overlay.style.margin == "none"){
-                overlay.style.margin = "none";
-            }
-        };
-        this.snapTo = function(e){
-            this.preMove();
-            overlay.style.top = e.clientY+"px";
-            overlay.style.left = e.clientX+"px"
-            console.log(this)
-            window.addEventListener("onmouseclick", this.snapTo);
-        };
-        this.waitFor = function(){
-            window.addEventListener("onmouseclick", this.snapTo);
-        };
-    };
 }
