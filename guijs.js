@@ -78,7 +78,7 @@ function GUI (assignments){
     }
 }
 */
-function GUI (assignments, guiID){
+function GUI (guiID){
     //set style vars
     this.width = 75;
     this.height = 75;
@@ -103,7 +103,6 @@ function GUI (assignments, guiID){
     this.init = function(){
         this.updateStyle();
         this.hide();
-        assignments();
     }
     this.updateStyle = function(){
         this.setStyleAttr("position","absolute");
