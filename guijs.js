@@ -91,8 +91,6 @@ function GUI (assignments, guiID){
     this.setHTML = function(html){
         this.overlay().innerHTML = html;
     }
-    //list of elements in overlay
-    this.elements = {};
     //add function to execute on click of a element
     this.addButton = function(id, func){
         document.getElementById(id).onclick = func;
